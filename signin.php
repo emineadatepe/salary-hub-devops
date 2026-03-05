@@ -1,6 +1,7 @@
 <?php 
-include "header.php"; 
+// 1. ADIM: PHP mantığını ve oturum yönetimini en başa alıyoruz.
 include "config.php";
+session_start(); // Eğer config.php içinde yoksa mutlaka ekle
 
 $error = "";
 
@@ -8,6 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
+    // Veritabanı işlemleri
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
@@ -15,15 +17,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password, $user["password_hash"])) {
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["username"] = $user["username"];
-        header("Location: index.php"); // Ana sayfaya veya entersalary.php'ye yönlendir
+        
+        // 2. ADIM: Hiçbir HTML çıktısı (header.php gibi) verilmeden yönlendirme yapıyoruz.
+        header("Location: index.php"); 
         exit;
     } else {
         $error = "Invalid username or password";
     }
 }
+
+// 3. ADIM: HTML çıktılarını (header.php) yönlendirme ihtimali bittikten sonra dahil ediyoruz.
+include "header.php"; 
 ?>
 
 <style>
+    /* CSS kodların aynen kalabilir */
     .auth-card {
         max-width: 400px;
         margin: 4rem auto;
@@ -33,72 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         box-shadow: 0 15px 35px rgba(0,0,0,0.05);
         border: 1px solid #f0f0f0;
     }
-
-    .auth-header h2 {
-        font-weight: 800;
-        color: #1a1c20;
-        margin-bottom: 10px;
-        text-align: center;
-    }
-
-    .form-label {
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: #495057;
-    }
-
-    .form-control {
-        padding: 12px 15px;
-        border-radius: 12px;
-        border: 1px solid #dee2e6;
-        transition: all 0.3s;
-    }
-
-    .form-control:focus {
-        border-color: #38b000;
-        box-shadow: 0 0 0 4px rgba(56, 176, 0, 0.1);
-    }
-
-    .btn-login {
-        background: #1a1c20;
-        color: white;
-        padding: 12px;
-        border-radius: 12px;
-        font-weight: 600;
-        width: 100%;
-        border: none;
-        margin-top: 10px;
-        transition: 0.3s;
-    }
-
-    .btn-login:hover {
-        background: #38b000;
-        transform: translateY(-2px);
-    }
-
-    .error-box {
-        background: #fff5f5;
-        color: #e53e3e;
-        padding: 12px;
-        border-radius: 10px;
-        font-size: 0.85rem;
-        margin-bottom: 20px;
-        border: 1px solid #feb2b2;
-        text-align: center;
-    }
-
-    .auth-footer {
-        text-align: center;
-        margin-top: 25px;
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-
-    .auth-footer a {
-        color: #38b000;
-        text-decoration: none;
-        font-weight: 600;
-    }
+    /* ... diğer stiller ... */
 </style>
 
 <div class="auth-card">
