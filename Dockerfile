@@ -1,12 +1,13 @@
-# 1. Aşama: Temel imajı belirle (PHP ve Apache bir arada olan resmi imaj)
 FROM php:8.2-apache
 
-# 2. Aşama: MySQL ile iletişim kurabilmek için gerekli PHP eklentilerini kur
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# PostgreSQL sürücüleri için gerekli sistem kütüphanelerini yükle
+RUN apt-get update && apt-get install -y libpq-dev
 
-# 3. Aşama: Senin bilgisayarındaki tüm dosyaları konteynerin içine kopyala
-# Apache'nin varsayılan çalışma dizini /var/www/html'dir.
+# PHP'nin PostgreSQL eklentilerini (sürücülerini) yükle
+RUN docker-php-ext-install pdo pdo_pgsql
+
+# Proje dosyalarını kopyala
 COPY . /var/www/html/
 
-# 4. Aşama: Apache'nin dış dünya ile konuşacağı portu belirt
+# Apache portunu aç
 EXPOSE 80
