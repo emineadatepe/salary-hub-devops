@@ -72,7 +72,7 @@
     <div class="row justify-content-center w-100">
         <div class="col-lg-10">
             <div class="hero-section">
-                <h1 class="hero-title">Welcome to Salary Hub System</h1>
+                <h1 class="hero-title">Welcome to MY Salary Hub System</h1>
                 
                 <div class="cta-buttons">
                     <?php if (!isset($_SESSION["user_id"])): ?>
