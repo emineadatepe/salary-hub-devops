@@ -9,7 +9,7 @@ $results = $pdo->prepare("
     SELECT j.name, s.salary,
            (SELECT AVG(salary) FROM salaries WHERE job_id = j.id) AS job_avg
     FROM salaries s
-    JOIN job j ON s.job_id = j.id
+    JOIN jobs j ON s.job_id = j.id
     WHERE s.user_id = ?
 ");
 $results->execute([$user_id]);
