@@ -1,30 +1,26 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-$env = parse_ini_file(__DIR__ . '/.env', false, INI_SCANNER_RAW);
-
-//var_dump($env); // <-- BUNU EKLEDİK
+// Render üzerindeki Environment Variable'lardan (Ortam Değişkenleri) bilgileri alıyoruz
+// Eğer bulutta değilsek (yereldeysek) varsayılan değerleri kullanır
+$host = getenv('DB_HOST') ?: 'dpg-d6kdrbma2pns738sdfdg-a'; 
+$db   = getenv('DB_NAME') ?: 'salary_db_85cc';
+$user = getenv('DB_USER') ?: 'salary_db_85cc_user';
+$port = getenv('DB_PORT') ?: '5432';
+// Şifre için Render panelindeki "Password" kısmındaki göz simgesine tıklayıp kopyaladığın şifreyi buraya yazmalısın
+$pass = getenv('DB_PASS') ?: '8zFVHE8yRnQvUEGoCfcgo42iF3A5wQTI'; 
 
 try {
-    $pdo = new PDO(
-        "mysql:host={$env['DB_HOST']};dbname={$env['DB_NAME']};charset=utf8mb4",
-        $env['DB_USER'],
-        $env['DB_PASS'],
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_TIMEOUT => 5
-        ]
-    );
-   // echo "DB CONNECTED";
+    // PostgreSQL bağlantı dizisi (DSN)
+    $dsn = "pgsql:host=$host;port=$port;dbname=$db";
+    
+    // PDO bağlantısını kuruyoruz
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+    
+    // Bağlantı başarılı!
 } catch (PDOException $e) {
-    echo "<pre>";
-    echo $e->getMessage();   // <-- ASIL HATA BURADA
-    echo "</pre>";
-    exit;
+    // Hata oluşursa ekrana basar
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
-
-
-
-
+?>
