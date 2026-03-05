@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    # Bu satır PHP'nin veritabanı hazır olana kadar beklemesine yardımcı olur
+    links:
+      - db
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: salary_db
+      MYSQL_ROOT_PASSWORD: password123
+    ports:
+      - "3306:3306"
