@@ -5,7 +5,7 @@ include "auth.php"; // auth.php içinde zaten config.php/pdo olduğunu varsayıy
 $success_msg = false;
 
 // Job’ları çek
-$jobs = $pdo->query("SELECT * FROM job")->fetchAll();
+$jobs = $pdo->query("SELECT * FROM jobs")->fetchAll();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $job_id  = $_POST["job_id"];
